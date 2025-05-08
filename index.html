@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Happy 4 Months!</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: linear-gradient(to right, #ff9a9e, #fad0c4);
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    /* Password prompt styles */
+    #passwordPrompt {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #fff;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #passwordPrompt input {
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    #passwordPrompt button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background: #ff6f91;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    #passwordPrompt p {
+      color: red;
+      margin-top: 10px;
+    }
+
+    h1 { font-size: 3em; margin: 20px 0; }
+    p { font-size: 1.2em; margin: 10px 0 30px; }
+
+    .photos {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      perspective: 1000px;
+      margin-bottom: 30px;
+    }
+    .card {
+      width: 300px; height: 300px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.8s;
+      cursor: pointer;
+    }
+    .card.flipped { transform: rotateY(180deg); }
+    .face {
+      position: absolute; width: 100%; height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8em; padding: 20px; box-sizing: border-box;
+    }
+    .front {
+      background: rgba(255,111,145,0.8);
+      color: white;
+    }
+    .back { transform: rotateY(180deg); }
+    .back img {
+      width: 100%; height: 100%; object-fit: cover;
+      border-radius: 20px;
+    }
+
+    .button-group {
+      margin: 20px 0;
+      display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+    }
+    button {
+      background-color: #ff6f91;
+      border: none;
+      color: white;
+      padding: 12px 25px;
+      font-size: 1em;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover { background-color: #ff4e7a; }
+    .click-me-button { font-size: 1.1em; padding: 12px 30px; }
+
+    .message-box {
+      background-color: rgba(255,111,145,0.9);
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px auto;
+      width: 80%; max-width: 600px;
+      font-size: 1.1em;
+    }
+
+    #celebrate, #celebrationPage, #lovePage {
+      display: none;
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 10;
+      background: #111;
+      color: white;
+      overflow: hidden;
+      box-sizing: border-box;
+      padding-top: 40px;
+    }
+
+    #celebrationPage h1, #lovePage h1 { color: #fff; margin-bottom: 20px; }
+    #celebrationImage, #loveImage {
+      max-width: 400px;
+      width: 80%;
+      height: auto;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    #celebrationPage .button-group, #lovePage .button-group {
+      position: absolute;
+      bottom: 30px;
+      left: 50%; transform: translateX(-50%);
+    }
+
+    .floating-love {
+      position: absolute;
+      font-size: 2em;
+      font-weight: bold;
+      color: #ff6f91;
+      animation: float 6s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      0%   { transform: translateY(0) translateX(0); }
+      25%  { transform: translateY(-50px) translateX(50px); }
+      50%  { transform: translateY(0) translateX(100px); }
+      75%  { transform: translateY(50px) translateX(50px); }
+      100% { transform: translateY(0) translateX(0); }
+    }
+
+    .music-emoji {
+      position: absolute;
+      font-size: 2em;
+      animation: floatMusic 5s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes floatMusic {
+      0%   { transform: translateY(0) translateX(0); opacity: 1; }
+      50%  { transform: translateY(-100px) translateX(30px); opacity: 0.7; }
+      100% { transform: translateY(-200px) translateX(-30px); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Password Prompt -->
+  <div id="passwordPrompt">
+    <h2>Please enter the password to continue 💖</h2>
+    <input type="password" id="passwordInput" placeholder="Enter password...">
+    <button onclick="checkPassword()">Submit</button>
+    <p id="errorMsg"></p>
+  </div>
+
+  <!-- Main Content -->
+  <div id="mainContent" style="display: none;">
+    <h1>Happy 4 Months Together! 💖🌸</h1>
+    <p>Every moment with you feels like magic. Cheers to many more months and memories! 🥂</p>
+
+    <div class="photos">
+      <div class="card" onclick="this.classList.toggle('flipped')">
+        <div class="face front">I LOVE YOU 💖🌸</div>
+        <div class="face back"><img src="Image.jpeg" alt="Aditi's Photo"></div>
+      </div>
+      <div class="card" onclick="this.classList.toggle('flipped')">
+        <div class="face front">I LOVE YOU 💖🌸</div>
+        <div class="face back"><img src="Memory.jpeg" alt="Couple Photo"></div>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button onclick="showNextMessage()">Secret Message</button>
+      <button class="click-me-button" onclick="openCelebration()">Click Me 🎆</button>
+      <button onclick="openLovePage()">Love ❤️</button>
+      <button onclick="toggleMusicPanel()">Music 🎵</button>
+    </div>
+
+    <div id="messageBox" class="message-box" style="display:none;"></div>
+
+    <div id="musicPanel" style="display: none; margin: 20px auto; text-align: left; max-width: 600px;">
+      <h2 style="color: #fff;">🎶 Choose Your Vibe:</h2>
+      <div style="background-color: rgba(255,111,145,0.9); padding: 15px; border-radius: 10px;">
+        <p><strong>Track 1:</strong> <audio controls src="Music 2.mp3"></audio></p>
+        <p><strong>Track 2:</strong> <audio controls src="Music 3.mp3"></audio></p>
+        <p><strong>Track 3:</strong> <audio controls src="Music 4.mp3"></audio></p>
+        <p><strong>Track 4:</strong> <audio controls src="Music 5.mp3"></audio></p>
+        <p><strong>Track 5:</strong> <audio controls src="Music 6.mp3"></audio></p>
+      </div>
+    </div>
+
+    <div class="floating-love">I LOVE YOU 💖</div>
+    <div class="floating-love" style="top: 10%; left: 20%; animation-delay: 1s;">I LOVE YOU 💖</div>
+    <div class="floating-love" style="top: 30%; left: 60%; animation-delay: 2s;">I LOVE YOU 💖</div>
+  </div>
+
+  <div id="celebrationPage">
+    <h1>Celebrating You and Me 💖🎆</h1>
+    <img id="celebrationImage" src="Baby.jpeg" alt="Celebration">
+    <div class="button-group">
+      <button onclick="closeCelebration()">Back</button>
+    </div>
+  </div>
+
+  <div id="lovePage">
+    <h1>Baby Girl ❤️</h1>
+    <img id="loveImage" src="" alt="Love Slideshow">
+    <div class="button-group">
+      <button onclick="closeLovePage()">Back</button>
+    </div>
+  </div>
+
+  <canvas id="celebrate"></canvas>
+  <div id="musicEmojisContainer"></div>
+
+  <script>
+    // Password check
+    function checkPassword() {
+      const correctPassword = "SoumyaAditi@09012025"; // Change your password here
+      const userInput = document.getElementById("passwordInput").value;
+      if (userInput === correctPassword) {
+        document.getElementById("passwordPrompt").style.display = "none";
+        document.getElementById("mainContent").style.display = "block";
+      } else {
+        document.getElementById("errorMsg").textContent = "Incorrect password. Try again.";
+      }
+    }
+
+    const messages = [
+      "You light up my life! 💖",
+      "Every day with you is a gift. 🎁",
+      "Together forever, no matter what. 💑",
+      "You are my everything! 🌸",
+      "I’m so lucky to have you. 🍀"
+    ];
+    let msgIdx = 0;
+    function showNextMessage() {
+      const box = document.getElementById('messageBox');
+      box.textContent = messages[msgIdx];
+      box.style.display = 'block';
+      msgIdx = (msgIdx + 1) % messages.length;
+      setTimeout(() => box.style.display = 'none', 10000);
+    }
+
+    const canvas = document.getElementById('celebrate');
+    const ctx = canvas.getContext('2d');
+    let W, H, fireworks = [];
+
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Firework {
+      constructor() {
+        this.x = Math.random() * W;
+        this.y = H;
+        this.vx = (Math.random() - 0.5) * 4;
+        this.vy = - (4 + Math.random() * 4);
+        this.alpha = 1;
+        this.size = 2 + Math.random() * 2;
+        this.exploded = false;
+        this.particles = [];
+      }
+      update() {
+        if (!this.exploded) {
+          this.x += this.vx;
+          this.y += this.vy;
+          this.vy += 0.1;
+          if (this.vy >= 0) this.explode();
+        } else {
+          this.particles.forEach(p => p.update());
+          this.particles = this.particles.filter(p => p.alpha > 0);
+        }
+      }
+      explode() {
+        this.exploded = true;
+        for (let i = 0; i < 50; i++) {
+          this.particles.push(new Particle(this.x, this.y));
+        }
+      }
+      draw() {
+        if (!this.exploded) {
+          ctx.save(); ctx.globalAlpha = this.alpha;
+          ctx.fillStyle = 'white';
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill(); ctx.restore();
+        } else {
+          this.particles.forEach(p => p.draw());
+        }
+      }
+    }
+
+    class Particle {
+      constructor(x, y) {
+        this.x = x; this.y = y;
+        const speed = Math.random() * 5 + 1;
+        const angle = Math.random() * Math.PI * 2;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.gravity = 0.05;
+        this.alpha = 1;
+        this.decay = 0.015 + Math.random() * 0.015;
+        const colors = ['#ff3f8b', '#04c2c9', '#2e55c1', '#fdff38', '#ff715b'];
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.size = 2 + Math.random() * 3;
+      }
+      update() {
+        this.vy += this.gravity;
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= this.decay;
+      }
+      draw() {
+        if (this.alpha <= 0) return;
+        ctx.save(); ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill(); ctx.restore();
+      }
+    }
+
+    function animate() {
+      ctx.fillStyle = 'rgba(0,0,0,0.1)';
+      ctx.fillRect(0, 0, W, H);
+      if (Math.random() < 0.05) fireworks.push(new Firework());
+      fireworks.forEach((f, i) => {
+        f.update(); f.draw();
+        if (f.exploded && f.particles.length === 0) fireworks.splice(i, 1);
+      });
+      requestAnimationFrame(animate);
+    }
+
+    function openCelebration() {
+      document.getElementById('mainContent').style.display = 'none';
+      document.getElementById('celebrationPage').style.display = 'block';
+      canvas.style.display = 'block';
+      animate();
+    }
+
+    function closeCelebration() {
+      document.getElementById('celebrationPage').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+      canvas.style.display = 'none';
+      fireworks = [];
+      ctx.clearRect(0, 0, W, H);
+    }
+
+    const loveImages = ["Baby.jpeg", "Hello.jpeg", "Baby 1.jpeg", "Baby 5.jpeg", "Aditi.jpeg"];
+    let loveIndex = 0;
+    let loveInterval;
+    function openLovePage() {
+      document.getElementById('mainContent').style.display = 'none';
+      document.getElementById('lovePage').style.display = 'block';
+      document.getElementById('loveImage').src = loveImages[0];
+      loveIndex = 1;
+      loveInterval = setInterval(() => {
+        if (loveIndex < loveImages.length) {
+          document.getElementById('loveImage').src = loveImages[loveIndex];
+          loveIndex++;
+        } else {
+          clearInterval(loveInterval);
+        }
+      }, 3000);
+    }
+
+    function closeLovePage() {
+      clearInterval(loveInterval);
+      document.getElementById('lovePage').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+    }
+
+    let emojiInterval;
+    function toggleMusicPanel() {
+      const panel = document.getElementById('musicPanel');
+      const container = document.getElementById('musicEmojisContainer');
+      const isShown = panel.style.display === 'block';
+
+      panel.style.display = isShown ? 'none' : 'block';
+
+      if (!isShown) startMusicEmojis();
+      else stopMusicEmojis();
+    }
+
+    function startMusicEmojis() {
+      emojiInterval = setInterval(() => {
+        const emoji = document.createElement('div');
+        emoji.className = 'music-emoji';
+        const emojis = ['🎶', '🎵', '🎧'];
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        emoji.style.left = Math.random() * window.innerWidth + 'px';
+        emoji.style.top = window.innerHeight + 'px';
+        document.getElementById('musicEmojisContainer').appendChild(emoji);
+        setTimeout(() => emoji.remove(), 5000);
+      }, 500);
+    }
+
+    function stopMusicEmojis() {
+      clearInterval(emojiInterval);
+      document.getElementById('musicEmojisContainer').innerHTML = '';
+    }
+  </script>
+</body>
+</html>
